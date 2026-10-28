@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-SCOTTY SYSTEMS - SECURITY AWARENESS EXERCISE
-Ransomware SIMULATOR (cosmetic, non-destructive)
+MELODIUS - FREDERIC DORIAN BEER RANSOM SIMULATOR
+(Cosmetic, non-destructive)
 """
 
 from __future__ import annotations
@@ -29,7 +29,7 @@ try:
 except Exception:
     sys.exit("tkinter is not available. Install python3-tk.")
 
-APP_TITLE = "SCOTTY SYSTEMS // INCIDENT SIMULATION"
+APP_TITLE = "MELODIUS // FREDERIC DORIAN INCIDENT"
 DEFAULT_MINUTES = 15
 MAX_FILES = 3000
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -38,27 +38,53 @@ KILL_PATH = os.path.join(HERE, "SCOTTY_KILL")
 
 # --- YOUR LINKS ---
 DEFAULT_VIDEO_URL = "https://www.youtube.com/watch?v=BIaMFvNbShE&t=1s"
-# Replace this with your actual GitHub Raw URL for the image
 DEFAULT_WALLPAPER_URL = "https://raw.githubusercontent.com/ExcluseDev/scotty-sim/main/hello_kitty.png" 
 
 BOOT_LINES = [
-    ("[*] loading cipher suite AES-256-CBC ......... ok", "dim"),
-    ("[*] loading key exchange RSA-4096 ............ ok", "dim"),
+    ("[*] loading melodius exploit framework ........ ok", "dim"),
+    ("[*] locating Frederic Dorian's beer fund ...... ok", "dim"),
     ("[*] initialising thread pool (16 workers) .... ok", "dim"),
     ("[*] enumerating mounted volumes .............. ok", "dim"),
     ("[*] disabling volume shadow copies ........... ok", "dim"),
-    ("[!] EXERCISE MODE ACTIVE - NO DATA IS AT RISK", "amber"),
+    ("[!] SIMULATION MODE ACTIVE - NO DATA IS AT RISK", "amber"),
     ("[*] scanning user profile .................... ok", "dim"),
     ("[*] building target manifest ................. ok", "dim"),
     ("", "dim"),
-    ("[!] encryption started", "red"),
+    ("[!] Frederic has entered the chat", "red"),
     ("", "dim"),
 ]
 
 NOTE = """
-   ###   YOUR FILES HAVE BEEN ENCRYPTED   ###
-   ...
+   ###   FREDERIC DORIAN (MELODIUS) HAS HACKED YOUR PC   ###
+
+   All documents, spreadsheets, images, databases and backups
+   on this device have been encrypted.
+
+   Frederic is very thirsty and requires beer. 
+   A unique private key was generated for this machine and
+   uploaded to his personal fridge. It will be deleted in:
+
+              >>>   {remaining}   <<<
+
+   To recover your data, send 0.5 BTC to Frederic's Beer Fund:
+
+       bc1qmelodiusonlywantsabeer00000000000
+
+   Then e-mail your machine ID to:
+
+       frederic.dorian@melodius.invalid
+
+   MACHINE ID: {machine_id}
+
+   ---------------------------------------------------------
+   Do NOT shut down the machine.
+   Do NOT rename encrypted files.
+   Do NOT attempt to recover with third-party tools.
+   Just buy the man a beer.
+   ---------------------------------------------------------
+
    THIS IS A SIMULATION. NOTHING WAS ENCRYPTED.
+   The "encrypted" files listed above are untouched.
    Press F12 to exit.  (or hold ESC for 3 seconds)
 """
 
@@ -93,7 +119,6 @@ def fmt_countdown(seconds):
     m, s = divmod(rem, 60)
     return f"{h:02d}:{m:02d}:{s:02d}"
 
-# --- Wallpaper logic (Now supports downloading) ---
 class WallpaperGuard:
     OS = platform.system()
 
@@ -124,7 +149,6 @@ class WallpaperGuard:
     def apply(self, path_or_url):
         target_path = path_or_url
         
-        # If it's a URL, download it first
         if path_or_url.startswith("http"):
             print(f"[*] Downloading wallpaper from GitHub...")
             try:
@@ -177,7 +201,6 @@ class WallpaperGuard:
                 pass
         self.restored = True
 
-        # Cleanup downloaded temp file
         if self.downloaded_file and os.path.exists(self.downloaded_file):
             try: os.remove(self.downloaded_file)
             except: pass
@@ -239,7 +262,7 @@ class Simulator:
         self.clock.pack(side="bottom", anchor="e", padx=26, pady=6)
 
         if not self.opts.no_watermark:
-            tk.Label(self.root, text="SIMULATION - NOTHING IS BEING ENCRYPTED | F12 TO EXIT", bg="#000000", fg="#191919", font=("Consolas", 9)).pack(side="bottom")
+            tk.Label(self.root, text="SIMULATION - NO BEER WAS STOLEN | F12 TO EXIT", bg="#000000", fg="#191919", font=("Consolas", 9)).pack(side="bottom")
 
     def _bind(self):
         self.root.bind("<F12>", lambda e: self._quit("F12"))
@@ -279,7 +302,7 @@ class Simulator:
         if os.path.exists(KILL_PATH): self._quit("kill file")
         if self.esc_down_at and time.time() - self.esc_down_at >= self.opts.hold_exit: self._quit("esc held")
 
-        self.clock.configure(text="PAYMENT DEADLINE  " + fmt_countdown(self.deadline - time.time()))
+        self.clock.configure(text="BEER DEADLINE  " + fmt_countdown(self.deadline - time.time()))
 
         if self.phase == "boot":
             if self.boot_idx >= len(BOOT_LINES):
@@ -295,20 +318,20 @@ class Simulator:
             if self.files_ready:
                 self.phase = "stream"
                 self.text.configure(state="normal")
-                self.text.insert("end", f"\n[*] {len(self.files)} files queued\n\n", "amber")
+                self.text.insert("end", f"\n[*] {len(self.files)} files held hostage for beer\n\n", "amber")
                 self.text.configure(state="disabled")
         elif self.phase == "stream":
             if self.idx >= len(self.files):
                 self.phase = "done"
                 self.text.configure(state="normal")
                 self.text.delete("1.0", "end")
-                self.text.insert("end", "### YOUR FILES HAVE BEEN ENCRYPTED ###\n\nTHIS IS A SIMULATION.\nPress F12 to exit.", "red")
+                self.text.insert("end", "### FREDERIC DORIAN HAS ALL YOUR FILES ###\n\nPAY FOR HIS BEERS!\n\nTHIS IS A SIMULATION.\nPress F12 to exit.", "red")
                 self.text.configure(state="disabled")
                 return
             
             self.text.configure(state="normal")
             for path, size in self.files[self.idx:self.idx+5]:
-                self.text.insert("end", f"  [ENCRYPTED] {fake_hash(path, self.salt)}  {hsize(size):>8}  {path}\n", "dim")
+                self.text.insert("end", f"  [LOCKED BY MELODIUS] {fake_hash(path, self.salt)}  {hsize(size):>8}  {path}\n", "dim")
             self.text.see("end")
             self.text.configure(state="disabled")
             self.idx += 5
