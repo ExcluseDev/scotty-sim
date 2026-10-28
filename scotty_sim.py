@@ -39,7 +39,7 @@ KILL_PATH = os.path.join(HERE, "SCOTTY_KILL")
 # --- YOUR LINKS ---
 DEFAULT_VIDEO_URL = "https://www.youtube.com/watch?v=BIaMFvNbShE&t=1s"
 # Replace this with your actual GitHub Raw URL for the image
-DEFAULT_WALLPAPER_URL = "https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/hello_kitty.png" 
+DEFAULT_WALLPAPER_URL = "https://raw.githubusercontent.com/ExcluseDev/scotty-sim/main/hello_kitty.png" 
 
 BOOT_LINES = [
     ("[*] loading cipher suite AES-256-CBC ......... ok", "dim"),
