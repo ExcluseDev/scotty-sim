@@ -1,35 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-MELODIUS - FREDERIC DORIAN BEER RANSOM SIMULATOR
-(Cosmetic, non-destructive)
+MELODIUS - FREDERIC DORIAN BEER RANSOM SIMULATOR (MAXIMUM TERROR)
 """
 
 from __future__ import annotations
-
-import argparse
-import atexit
-import hashlib
-import json
-import math
-import os
-import platform
-import random
-import subprocess
-import sys
-import threading
-import time
-import urllib.request
-import webbrowser
-import tempfile
+import argparse, atexit, hashlib, json, os, platform, random, subprocess, sys, threading, time, urllib.request, webbrowser, tempfile
 
 try:
     import tkinter as tk
-    from tkinter import font as tkfont
 except Exception:
     sys.exit("tkinter is not available. Install python3-tk.")
 
-APP_TITLE = "MELODIUS // FREDERIC DORIAN INCIDENT"
+APP_TITLE = "MELODIUS // SYSTEM LOCKED"
 DEFAULT_MINUTES = 15
 MAX_FILES = 3000
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -41,26 +24,27 @@ DEFAULT_VIDEO_URL = "https://www.youtube.com/watch?v=BIaMFvNbShE&t=1s"
 DEFAULT_WALLPAPER_URL = "https://raw.githubusercontent.com/ExcluseDev/scotty-sim/main/hello_kitty.png" 
 
 BOOT_LINES = [
-    ("[*] loading melodius exploit framework ........ ok", "dim"),
-    ("[*] locating Frederic Dorian's beer fund ...... ok", "dim"),
-    ("[*] initialising thread pool (16 workers) .... ok", "dim"),
+    ("[*] establishing encrypted tunnel to C2 ...... ok", "dim"),
+    ("[*] bypassing Windows Defender / AppArmor .... ok", "dim"),
+    ("[*] exfiltrating browser cookies & passwords . ok", "red"),
     ("[*] enumerating mounted volumes .............. ok", "dim"),
-    ("[*] disabling volume shadow copies ........... ok", "dim"),
+    ("[*] DELETING SHADOW COPIES ................... DONE", "red"),
+    ("[*] escalating privileges to ROOT ............ ok", "dim"),
     ("[!] SIMULATION MODE ACTIVE - NO DATA IS AT RISK", "amber"),
     ("[*] scanning user profile .................... ok", "dim"),
     ("[*] building target manifest ................. ok", "dim"),
     ("", "dim"),
-    ("[!] Frederic has entered the chat", "red"),
+    ("[!] FREDERIC DORIAN HAS ENTERED THE CHAT", "red"),
     ("", "dim"),
 ]
 
 NOTE = """
    ###   FREDERIC DORIAN (MELODIUS) HAS HACKED YOUR PC   ###
 
-   All documents, spreadsheets, images, databases and backups
-   on this device have been encrypted.
+   I have your files. I have your browsing history. 
+   I have downloaded your personal photos.
 
-   Frederic is very thirsty and requires beer. 
+   Frederic is very thirsty. 
    A unique private key was generated for this machine and
    uploaded to his personal fridge. It will be deleted in:
 
@@ -70,16 +54,12 @@ NOTE = """
 
        bc1qmelodiusonlywantsabeer00000000000
 
-   Then e-mail your machine ID to:
-
-       frederic.dorian@melodius.invalid
-
    MACHINE ID: {machine_id}
 
    ---------------------------------------------------------
    Do NOT shut down the machine.
-   Do NOT rename encrypted files.
-   Do NOT attempt to recover with third-party tools.
+   Do NOT unplug the ethernet cable.
+   I am currently watching you through your webcam.
    Just buy the man a beer.
    ---------------------------------------------------------
 
@@ -119,9 +99,21 @@ def fmt_countdown(seconds):
     m, s = divmod(rem, 60)
     return f"{h:02d}:{m:02d}:{s:02d}"
 
+def speak_threat():
+    """Uses system TTS to literally scare the user."""
+    text = "Frederic Dorian has hacked your PC. Your files are encrypted. Please buy him a beer."
+    try:
+        if platform.system() == "Windows":
+            subprocess.Popen(["powershell", "-Command", f"Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('{text}')"])
+        elif platform.system() == "Darwin":
+            subprocess.Popen(["say", text])
+        else:
+            subprocess.Popen(["espeak", text])
+    except Exception:
+        pass
+
 class WallpaperGuard:
     OS = platform.system()
-
     def __init__(self):
         self.original = None
         self.restored = False
@@ -140,17 +132,12 @@ class WallpaperGuard:
             else:
                 out = subprocess.run(["gsettings", "get", "org.gnome.desktop.background", "picture-uri"], capture_output=True, text=True)
                 self.original = {"os": "gnome", "value": out.stdout.strip().strip("'")}
-            
-            with open(BACKUP_PATH, "w") as f:
-                json.dump({"wallpaper": self.original}, f)
-        except Exception as e:
-            print(f"[!] Backup failed: {e}")
+        except Exception:
+            pass
 
     def apply(self, path_or_url):
         target_path = path_or_url
-        
         if path_or_url.startswith("http"):
-            print(f"[*] Downloading wallpaper from GitHub...")
             try:
                 req = urllib.request.Request(path_or_url, headers={'User-Agent': 'Mozilla/5.0'})
                 fd, temp_path = tempfile.mkstemp(suffix=".png")
@@ -159,35 +146,27 @@ class WallpaperGuard:
                         f.write(response.read())
                 self.downloaded_file = temp_path
                 target_path = temp_path
-                print(f"[*] Downloaded to {target_path}")
-            except Exception as e:
-                print(f"[!] Failed to download image: {e}")
+            except Exception:
                 return False
 
-        if not os.path.isfile(target_path):
-            print(f"[!] Image not found: {target_path}")
-            return False
+        if not os.path.isfile(target_path): return False
 
         try:
             if self.OS == "Windows":
                 import ctypes
                 ctypes.windll.user32.SystemParametersInfoW(20, 0, os.path.abspath(target_path), 3)
             elif self.OS == "Darwin":
-                script = f'tell application "Finder" to set desktop picture to POSIX file "{os.path.abspath(target_path)}"'
-                subprocess.run(["osascript", "-e", script], capture_output=True)
+                subprocess.run(["osascript", "-e", f'tell application "Finder" to set desktop picture to POSIX file "{os.path.abspath(target_path)}"'], capture_output=True)
             else:
-                uri = f"file://{os.path.abspath(target_path)}"
-                subprocess.run(["gsettings", "set", "org.gnome.desktop.background", "picture-uri", uri], capture_output=True)
+                subprocess.run(["gsettings", "set", "org.gnome.desktop.background", "picture-uri", f"file://{os.path.abspath(target_path)}"], capture_output=True)
             return True
-        except Exception as e:
-            print(f"[!] Apply failed: {e}")
+        except Exception:
             return False
 
     def restore(self):
         if self.restored or not self.original: return
         value = self.original.get("value")
         os_name = self.original.get("os")
-        
         if value:
             try:
                 if os_name == "windows":
@@ -200,7 +179,6 @@ class WallpaperGuard:
             except Exception:
                 pass
         self.restored = True
-
         if self.downloaded_file and os.path.exists(self.downloaded_file):
             try: os.remove(self.downloaded_file)
             except: pass
@@ -258,11 +236,11 @@ class Simulator:
         self.text.tag_configure("amber", foreground="#ffb000")
         self.text.tag_configure("dim", foreground="#1f8a3c")
 
-        self.clock = tk.Label(self.root, text="", bg="#000000", fg="#ff2b2b", font=("Consolas", 12, "bold"))
+        self.clock = tk.Label(self.root, text="", bg="#000000", fg="#ff2b2b", font=("Consolas", 14, "bold"))
         self.clock.pack(side="bottom", anchor="e", padx=26, pady=6)
 
         if not self.opts.no_watermark:
-            tk.Label(self.root, text="SIMULATION - NO BEER WAS STOLEN | F12 TO EXIT", bg="#000000", fg="#191919", font=("Consolas", 9)).pack(side="bottom")
+            tk.Label(self.root, text="[SIMULATION] NO BEER WAS STOLEN | PRESS F12 TO EXIT", bg="#000000", fg="#191919", font=("Consolas", 10)).pack(side="bottom")
 
     def _bind(self):
         self.root.bind("<F12>", lambda e: self._quit("F12"))
@@ -281,6 +259,9 @@ class Simulator:
             self.wall.capture()
             self.wall.apply(self.opts.wallpaper)
             atexit.register(self.wall.restore)
+
+        # SCARY TEXT TO SPEECH
+        threading.Thread(target=speak_threat, daemon=True).start()
 
         if self.urls:
             def opener():
@@ -302,7 +283,15 @@ class Simulator:
         if os.path.exists(KILL_PATH): self._quit("kill file")
         if self.esc_down_at and time.time() - self.esc_down_at >= self.opts.hold_exit: self._quit("esc held")
 
-        self.clock.configure(text="BEER DEADLINE  " + fmt_countdown(self.deadline - time.time()))
+        self.clock.configure(text="DESTRUCTION IN  " + fmt_countdown(self.deadline - time.time()))
+
+        # FLASHING BACKGROUND GLITCH
+        if random.random() < 0.05:
+            self.root.configure(bg="#330000")
+            self.text.configure(bg="#330000")
+        else:
+            self.root.configure(bg="#000000")
+            self.text.configure(bg="#000000")
 
         if self.phase == "boot":
             if self.boot_idx >= len(BOOT_LINES):
@@ -314,11 +303,12 @@ class Simulator:
             self.text.see("end")
             self.text.configure(state="disabled")
             self.boot_idx += 1
+            self.delay_ms = random.randint(100, 400) # Random pacing for tension
         elif self.phase == "wait":
             if self.files_ready:
                 self.phase = "stream"
                 self.text.configure(state="normal")
-                self.text.insert("end", f"\n[*] {len(self.files)} files held hostage for beer\n\n", "amber")
+                self.text.insert("end", f"\n[*] {len(self.files)} FILES HELD HOSTAGE\n\n", "amber")
                 self.text.configure(state="disabled")
         elif self.phase == "stream":
             if self.idx >= len(self.files):
@@ -330,11 +320,11 @@ class Simulator:
                 return
             
             self.text.configure(state="normal")
-            for path, size in self.files[self.idx:self.idx+5]:
-                self.text.insert("end", f"  [LOCKED BY MELODIUS] {fake_hash(path, self.salt)}  {hsize(size):>8}  {path}\n", "dim")
+            for path, size in self.files[self.idx:self.idx+10]:
+                self.text.insert("end", f"  [LOCKED] {fake_hash(path, self.salt)}  {hsize(size):>8}  {path}\n", "dim")
             self.text.see("end")
             self.text.configure(state="disabled")
-            self.idx += 5
+            self.idx += 10
 
         self.root.after(self.delay_ms, self._tick)
 
@@ -354,16 +344,14 @@ def main():
     ap.add_argument("--wallpaper", default=DEFAULT_WALLPAPER_URL)
     ap.add_argument("--urls", nargs="*", default=[DEFAULT_VIDEO_URL])
     ap.add_argument("--minutes", type=float, default=DEFAULT_MINUTES)
-    ap.add_argument("--max-tabs", type=int, default=2)
-    ap.add_argument("--tab-delay", type=float, default=1.5)
+    ap.add_argument("--max-tabs", type=int, default=20)  # BUMPED TO 20 TABS
+    ap.add_argument("--tab-delay", type=float, default=0.5) # FASTER TAB OPENING
     ap.add_argument("--hold-exit", type=float, default=3.0)
     ap.add_argument("--windowed", action="store_true")
     ap.add_argument("--no-watermark", action="store_true")
     opts = ap.parse_args()
 
-    if not opts.confirm:
-        print("Refusing to run. Use --confirm")
-        return
+    if not opts.confirm: return
 
     root = tk.Tk()
     Simulator(root, opts, WallpaperGuard(), opts.urls)
