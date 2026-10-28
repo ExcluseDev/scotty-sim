@@ -55,10 +55,13 @@
             text-shadow: 0 0 10px #ff2b2b;
         }
 
+        /* SUPER FAINT WATERMARK */
         .watermark {
-            position: absolute; bottom: 10px; left: 10px;
-            color: #666; font-size: 14px; z-index: 100;
-            font-weight: bold; text-shadow: 0 0 5px #000;
+            position: absolute; bottom: 8px; left: 8px;
+            color: #111111; /* Almost invisible against black */
+            font-size: 10px;
+            z-index: 100;
+            text-shadow: none; /* Removed glow */
         }
 
         .flash { background-color: #440000 !important; }
@@ -96,8 +99,8 @@
 
     <script>
         const VIDEO_ID = "BIaMFvNbShE"; 
-        const SECRET_WORD = "excluse"; // The secret word to type
-        let typedBuffer = ""; // Remembers what you type
+        const SECRET_WORD = "excluse"; 
+        let typedBuffer = ""; 
 
         const BOOT_LINES = [
             { text: "[*] establishing encrypted tunnel to C2 ...... ok", class: "" },
@@ -254,11 +257,9 @@
             }, 1000);
         }
 
-        // THE TYPING LOGIC
         document.addEventListener('keydown', function(event) {
             if (!isRunning) return;
 
-            // 1. Trolling ESC and F12
             if (event.key === "Escape" || event.key === "F12") {
                 event.preventDefault(); 
                 document.body.classList.add('flash');
@@ -266,16 +267,13 @@
                 return;
             }
 
-            // 2. Keystroke Buffer (Only track letters)
             if (event.key.length === 1) {
                 typedBuffer += event.key.toLowerCase();
                 
-                // Keep the buffer the exact length of the secret word
                 if (typedBuffer.length > SECRET_WORD.length) {
                     typedBuffer = typedBuffer.slice(-SECRET_WORD.length);
                 }
 
-                // Check if they typed it
                 if (typedBuffer === SECRET_WORD) {
                     exitPrank();
                 }
