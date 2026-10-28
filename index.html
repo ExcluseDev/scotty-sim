@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melodius Security</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            color: #33ff66;
+            font-family: "Courier New", Courier, monospace;
+            overflow: hidden;
+            transition: background-color 0.2s;
+        }
+
+        /* The Hello Kitty Wallpaper Background */
+        .wallpaper {
+            background-image: url('https://raw.githubusercontent.com/ExcluseDev/scotty-sim/main/hello_kitty.png');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.3) blur(3px);
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            display: none;
+        }
+
+        #intro-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+        }
+
+        button {
+            background: #ff2b2b;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 20px;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        button:hover { background: #cc0000; }
+
+        #terminal {
+            display: none;
+            padding: 30px;
+            height: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #output {
+            flex-grow: 1;
+            overflow: hidden;
+            white-space: pre-wrap;
+            line-height: 1.4;
+            font-size: 16px;
+            text-shadow: 0 0 5px #33ff66;
+        }
+
+        .red { color: #ff2b2b; text-shadow: 0 0 5px #ff2b2b; }
+        .amber { color: #ffb000; text-shadow: 0 0 5px #ffb000; }
+        
+        #clock {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff2b2b;
+            text-align: right;
+            padding-top: 10px;
+            border-top: 1px solid #333;
+        }
+
+        .watermark {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            color: #191919;
+            font-size: 12px;
+        }
+
+        /* Screen Flash Effect */
+        .flash { background-color: #330000 !important; }
+    </style>
+</head>
+<body>
+
+    <div class="wallpaper" id="wallpaper"></div>
+
+    <div id="intro-screen">
+        <h1 class="red">⚠️ SECURITY BREACH DETECTED ⚠️</h1>
+        <p>Melodius malware has infected this system.</p>
+        <button onclick="startPrank()">Click to view error log</button>
+        <p style="font-size: 12px; color: #666; margin-top: 20px;">(Note: Turn your volume up)</p>
+    </div>
+
+    <div id="terminal">
+        <div id="output"></div>
+        <div id="clock">DESTRUCTION IN 14:59</div>
+    </div>
+
+    <div class="watermark">[SIMULATION] PRESS F12 OR ESC TO EXIT</div>
+
+    <script>
+        const VIDEO_URL = "https://www.youtube.com/watch?v=BIaMFvNbShE&t=1s";
+        const BOOT_LINES = [
+            { text: "[*] establishing encrypted tunnel to C2 ...... ok", class: "" },
+            { text: "[*] bypassing system security ................ ok", class: "" },
+            { text: "[*] exfiltrating browser cookies & passwords . ok", class: "red" },
+            { text: "[*] enumerating mounted volumes .............. ok", class: "" },
+            { text: "[*] DELETING SHADOW COPIES ................... DONE", class: "red" },
+            { text: "[*] escalating privileges to ROOT ............ ok", class: "" },
+            { text: "[!] SIMULATION MODE ACTIVE - NO DATA IS AT RISK", class: "amber" },
+            { text: "[*] scanning user profile .................... ok", class: "" },
+            { text: "[*] building target manifest ................. ok", class: "" },
+            { text: "", class: "" },
+            { text: "[!] FREDERIC DORIAN HAS ENTERED THE CHAT", class: "red" },
+            { text: "", class: "" }
+        ];
+
+        const NOTE = `
+   ###   FREDERIC DORIAN (MELODIUS) HAS HACKED YOUR PC   ###
+
+   I have your files. I have your browsing history. 
+   I have downloaded your personal photos.
+
+   Frederic is very thirsty. 
+   A unique private key was generated for this machine and
+   uploaded to his personal fridge. It will be deleted in 15 minutes.
+
+   To recover your data, send 0.5 BTC to Frederic's Beer Fund:
+       bc1qmelodiusonlywantsabeer00000000000
+
+   ---------------------------------------------------------
+   Do NOT close this tab.
+   Do NOT unplug the ethernet cable.
+   I am currently watching you through your webcam.
+   Just buy the man a beer.
+   ---------------------------------------------------------
+
+   THIS IS A SIMULATION. NOTHING WAS ENCRYPTED.
+   Press F12 or ESC to exit.
+`;
+
+        let timerInterval;
+
+        function startPrank() {
+            // 1. Hide intro, show terminal
+            document.getElementById('intro-screen').style.display = 'none';
+            document.getElementById('terminal').style.display = 'flex';
+            document.getElementById('wallpaper').style.display = 'block';
+
+            // 2. Request Fullscreen (requires user click to work)
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            }
+
+            // 3. Text-to-Speech (Scary Voice)
+            if ('speechSynthesis' in window) {
+                const msg = new SpeechSynthesisUtterance("Frederic Dorian has hacked your PC. Please buy him a beer.");
+                msg.rate = 0.9;
+                msg.pitch = 0.5; // Deep, creepy voice
+                window.speechSynthesis.speak(msg);
+            }
+
+            // 4. Open YouTube Tabs (Browsers will block most, but we try)
+            setTimeout(() => {
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => window.open(VIDEO_URL, '_blank'), i * 500);
+                }
+            }, 2000);
+
+            // 5. Start the flashing background effect
+            setInterval(() => {
+                document.body.classList.toggle('flash');
+            }, 150);
+
+            // 6. Start the Boot Sequence
+            runBootSequence();
+
+            // 7. Start Countdown
+            startTimer(15 * 60);
+        }
+
+        function runBootSequence() {
+            const output = document.getElementById('output');
+            let i = 0;
+            
+            function typeLine() {
+                if (i < BOOT_LINES.length) {
+                    const line = BOOT_LINES[i];
+                    const span = document.createElement('div');
+                    span.textContent = line.text;
+                    if (line.class) span.className = line.class;
+                    output.appendChild(span);
+                    output.scrollTop = output.scrollHeight;
+                    i++;
+                    setTimeout(typeLine, Math.random() * 300 + 100);
+                } else {
+                    startFileStream();
+                }
+            }
+            typeLine();
+        }
+
+        function startFileStream() {
+            const output = document.getElementById('output');
+            const fileExts = ['docx', 'pdf', 'jpg', 'png', 'txt', 'mp4', 'xlsx'];
+            
+            let streamInterval = setInterval(() => {
+                if (!document.getElementById('terminal').style.display === 'flex') return;
+                
+                const hash = Math.random().toString(16).substring(2, 10).toUpperCase();
+                const ext = fileExts[Math.floor(Math.random() * fileExts.length)];
+                const size = (Math.random() * 10).toFixed(1) + 'MB';
+                const name = `C:\\Users\\Public\\Documents\\file_${Math.floor(Math.random()*9999)}.${ext}`;
+                
+                const span = document.createElement('div');
+                span.textContent = `  [LOCKED] ${hash}  ${size}  ${name}`;
+                output.appendChild(span);
+                output.scrollTop = output.scrollHeight;
+
+                // Limit output to prevent browser lag
+                if (output.childNodes.length > 50) {
+                    output.removeChild(output.firstChild);
+                }
+            }, 50);
+        }
+
+        function startTimer(duration) {
+            const clock = document.getElementById('clock');
+            let timer = duration, minutes, seconds;
+            
+            timerInterval = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                clock.textContent = "DESTRUCTION IN  " + minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    clearInterval(timerInterval);
+                }
+            }, 1000);
+        }
+
+        // Escape Hatch: Press F12 or ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape" || event.key === "F12") {
+                exitPrank();
+            }
+        });
+
+        function exitPrank() {
+            clearInterval(timerInterval);
+            window.speechSynthesis.cancel();
+            
+            // Exit fullscreen
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(() => {});
+            }
+
+            // Show a clean recovery screen
+            document.body.classList.remove('flash');
+            document.getElementById('terminal').innerHTML = `
+                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;">
+                    <h1 class="amber" style="font-size: 3rem;">SIMULATION ENDED</h1>
+                    <p style="color: white;">You successfully pressed F12 / ESC.</p>
+                    <p style="color: #888;">No files were harmed. No beer was stolen.</p>
+                    <a href="" style="color: #33ff66; margin-top: 20px;">Reload Page</a>
+                </div>
+            `;
+            document.getElementById('wallpaper').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
