@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-MELODIUS - FREDERIC DORIAN BEER RANSOM SIMULATOR (MAXIMUM TERROR)
+ALANEK KOCH - JOINT RANSOM SIMULATOR (MAXIMUM TERROR)
 """
 
 from __future__ import annotations
@@ -12,14 +12,12 @@ try:
 except Exception:
     sys.exit("tkinter is not available. Install python3-tk.")
 
-APP_TITLE = "MELODIUS // SYSTEM LOCKED"
+APP_TITLE = "ALANEK KOCH // SYSTEM LOCKED"
 DEFAULT_MINUTES = 15
 MAX_FILES = 3000
 HERE = os.path.dirname(os.path.abspath(__file__))
-BACKUP_PATH = os.path.join(HERE, "sim_wallpaper_backup.json")
 KILL_PATH = os.path.join(HERE, "SCOTTY_KILL")
 
-# --- YOUR LINKS ---
 DEFAULT_VIDEO_URL = "https://www.youtube.com/watch?v=BIaMFvNbShE&t=1s"
 DEFAULT_WALLPAPER_URL = "https://raw.githubusercontent.com/ExcluseDev/scotty-sim/main/hello_kitty.png" 
 
@@ -34,25 +32,25 @@ BOOT_LINES = [
     ("[*] scanning user profile .................... ok", "dim"),
     ("[*] building target manifest ................. ok", "dim"),
     ("", "dim"),
-    ("[!] FREDERIC DORIAN HAS ENTERED THE CHAT", "red"),
+    ("[!] ALANEK KOCH HAS ENTERED THE CHAT", "red"),
     ("", "dim"),
 ]
 
 NOTE = """
-   ###   FREDERIC DORIAN (MELODIUS) HAS HACKED YOUR PC   ###
+   ###   ALANEK KOCH HAS HACKED YOUR PC   ###
 
    I have your files. I have your browsing history. 
    I have downloaded your personal photos.
 
-   Frederic is very thirsty. 
+   Alanek is very stressed. 
    A unique private key was generated for this machine and
-   uploaded to his personal fridge. It will be deleted in:
+   uploaded to his personal stash. It will be deleted in:
 
               >>>   {remaining}   <<<
 
-   To recover your data, send 0.5 BTC to Frederic's Beer Fund:
+   To recover your data, send 0.5 BTC to Alanek's Joint Fund:
 
-       bc1qmelodiusonlywantsabeer00000000000
+       bc1qalanekkochonlywantsjoints000000
 
    MACHINE ID: {machine_id}
 
@@ -60,7 +58,7 @@ NOTE = """
    Do NOT shut down the machine.
    Do NOT unplug the ethernet cable.
    I am currently watching you through your webcam.
-   Just buy the man a beer.
+   Just roll Alanek a joint.
    ---------------------------------------------------------
 
    THIS IS A SIMULATION. NOTHING WAS ENCRYPTED.
@@ -100,8 +98,7 @@ def fmt_countdown(seconds):
     return f"{h:02d}:{m:02d}:{s:02d}"
 
 def speak_threat():
-    """Uses system TTS to literally scare the user."""
-    text = "Frederic Dorian has hacked your PC. Your files are encrypted. Please buy him a beer."
+    text = "Alanek Koch has hacked your PC. Your files are encrypted. Please roll him a joint."
     try:
         if platform.system() == "Windows":
             subprocess.Popen(["powershell", "-Command", f"Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('{text}')"])
@@ -240,7 +237,7 @@ class Simulator:
         self.clock.pack(side="bottom", anchor="e", padx=26, pady=6)
 
         if not self.opts.no_watermark:
-            tk.Label(self.root, text="[SIMULATION] NO BEER WAS STOLEN | PRESS F12 TO EXIT", bg="#000000", fg="#191919", font=("Consolas", 10)).pack(side="bottom")
+            tk.Label(self.root, text="[SIMULATION] NO JOINTS WERE STOLEN FROM ALANEK | PRESS F12 TO EXIT", bg="#000000", fg="#191919", font=("Consolas", 10)).pack(side="bottom")
 
     def _bind(self):
         self.root.bind("<F12>", lambda e: self._quit("F12"))
@@ -260,7 +257,6 @@ class Simulator:
             self.wall.apply(self.opts.wallpaper)
             atexit.register(self.wall.restore)
 
-        # SCARY TEXT TO SPEECH
         threading.Thread(target=speak_threat, daemon=True).start()
 
         if self.urls:
@@ -285,7 +281,6 @@ class Simulator:
 
         self.clock.configure(text="DESTRUCTION IN  " + fmt_countdown(self.deadline - time.time()))
 
-        # FLASHING BACKGROUND GLITCH
         if random.random() < 0.05:
             self.root.configure(bg="#330000")
             self.text.configure(bg="#330000")
@@ -303,7 +298,7 @@ class Simulator:
             self.text.see("end")
             self.text.configure(state="disabled")
             self.boot_idx += 1
-            self.delay_ms = random.randint(100, 400) # Random pacing for tension
+            self.delay_ms = random.randint(100, 400)
         elif self.phase == "wait":
             if self.files_ready:
                 self.phase = "stream"
@@ -315,7 +310,7 @@ class Simulator:
                 self.phase = "done"
                 self.text.configure(state="normal")
                 self.text.delete("1.0", "end")
-                self.text.insert("end", "### FREDERIC DORIAN HAS ALL YOUR FILES ###\n\nPAY FOR HIS BEERS!\n\nTHIS IS A SIMULATION.\nPress F12 to exit.", "red")
+                self.text.insert("end", "### ALANEK KOCH HAS ALL YOUR FILES ###\n\nPAY FOR HIS JOINTS!\n\nTHIS IS A SIMULATION.\nPress F12 to exit.", "red")
                 self.text.configure(state="disabled")
                 return
             
@@ -344,8 +339,8 @@ def main():
     ap.add_argument("--wallpaper", default=DEFAULT_WALLPAPER_URL)
     ap.add_argument("--urls", nargs="*", default=[DEFAULT_VIDEO_URL])
     ap.add_argument("--minutes", type=float, default=DEFAULT_MINUTES)
-    ap.add_argument("--max-tabs", type=int, default=20)  # BUMPED TO 20 TABS
-    ap.add_argument("--tab-delay", type=float, default=0.5) # FASTER TAB OPENING
+    ap.add_argument("--max-tabs", type=int, default=20) 
+    ap.add_argument("--tab-delay", type=float, default=0.5)
     ap.add_argument("--hold-exit", type=float, default=3.0)
     ap.add_argument("--windowed", action="store_true")
     ap.add_argument("--no-watermark", action="store_true")
