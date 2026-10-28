@@ -6,90 +6,66 @@
     <title>Alanek Koch Security</title>
     <style>
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000;
-            color: #33ff66;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background-color: #000; color: #33ff66;
             font-family: "Courier New", Courier, monospace;
             overflow: hidden;
-            transition: background-color 0.2s;
+            transition: background-color 0.05s;
+            user-select: none; 
         }
 
         .wallpaper {
             background-image: url('https://raw.githubusercontent.com/ExcluseDev/scotty-sim/main/hello_kitty.png');
-            background-size: cover;
-            background-position: center;
-            filter: brightness(0.3) blur(3px);
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            display: none;
+            background-size: cover; background-position: center;
+            filter: brightness(0.2) blur(5px) contrast(2);
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; display: none;
         }
 
         #intro-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            text-align: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100%; text-align: center;
         }
 
         button {
-            background: #ff2b2b;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 20px;
-            font-family: inherit;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-top: 20px;
+            background: #ff2b2b; color: white; border: none;
+            padding: 15px 30px; font-size: 20px; font-family: inherit;
+            font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 20px;
+            box-shadow: 0 0 15px #ff2b2b;
         }
 
         button:hover { background: #cc0000; }
 
         #terminal {
-            display: none;
-            padding: 30px;
-            height: 100%;
-            box-sizing: border-box;
+            display: none; padding: 30px; height: 100%; box-sizing: border-box;
             flex-direction: column;
         }
 
         #output {
-            flex-grow: 1;
-            overflow: hidden;
-            white-space: pre-wrap;
-            line-height: 1.4;
-            font-size: 16px;
-            text-shadow: 0 0 5px #33ff66;
+            flex-grow: 1; overflow: hidden; white-space: pre-wrap;
+            line-height: 1.4; font-size: 16px; text-shadow: 0 0 8px #33ff66;
         }
 
-        .red { color: #ff2b2b; text-shadow: 0 0 5px #ff2b2b; }
-        .amber { color: #ffb000; text-shadow: 0 0 5px #ffb000; }
+        .red { color: #ff2b2b; text-shadow: 0 0 8px #ff2b2b; }
+        .amber { color: #ffb000; text-shadow: 0 0 8px #ffb000; }
         
         #clock {
-            font-size: 20px;
-            font-weight: bold;
-            color: #ff2b2b;
-            text-align: right;
-            padding-top: 10px;
-            border-top: 1px solid #333;
+            font-size: 24px; font-weight: bold; color: #ff2b2b;
+            text-align: right; padding-top: 10px; border-top: 1px solid #555;
+            text-shadow: 0 0 10px #ff2b2b;
         }
 
         .watermark {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            color: #191919;
-            font-size: 12px;
+            position: absolute; bottom: 10px; left: 10px;
+            color: #666; font-size: 14px; z-index: 100;
+            font-weight: bold; text-shadow: 0 0 5px #000;
         }
 
-        .flash { background-color: #330000 !important; }
+        .flash { background-color: #440000 !important; }
+
+        #yt-container {
+            position: absolute; top: -9999px; left: -9999px;
+        }
     </style>
 </head>
 <body>
@@ -97,10 +73,10 @@
     <div class="wallpaper" id="wallpaper"></div>
 
     <div id="intro-screen">
-        <h1 class="red">⚠️ SECURITY BREACH DETECTED ⚠️</h1>
-        <p>Alanek Koch malware has infected this system.</p>
-        <button onclick="startPrank()">Click to view error log</button>
-        <p style="font-size: 12px; color: #666; margin-top: 20px;">(Note: Turn your volume up)</p>
+        <h1 class="red" style="font-size: 3rem; text-shadow: 0 0 20px red;">⚠️ CRITICAL BREACH ⚠️</h1>
+        <p style="font-size: 1.2rem; color: #fff;">Alanek Koch malware has infected this system.</p>
+        <button onclick="startPrank()">CLICK TO INITIATE RECOVERY</button>
+        <p style="font-size: 12px; color: #ff2b2b; margin-top: 20px; animation: blink 1s infinite;">(WARNING: LOUD AUDIO. TURN VOLUME DOWN)</p>
     </div>
 
     <div id="terminal">
@@ -108,10 +84,21 @@
         <div id="clock">DESTRUCTION IN 14:59</div>
     </div>
 
-    <div class="watermark">[SIMULATION] PRESS F12 OR ESC TO EXIT</div>
+    <div class="watermark">[SIMULATION] TYPE "excluse" TO EXIT</div>
+
+    <div id="yt-container">
+        <iframe id="ytplayer" width="560" height="315" 
+                src="" 
+                frameborder="0" 
+                allow="autoplay; encrypted-media" 
+                allowfullscreen></iframe>
+    </div>
 
     <script>
-        const VIDEO_URL = "https://www.youtube.com/watch?v=BIaMFvNbShE&t=1s";
+        const VIDEO_ID = "BIaMFvNbShE"; 
+        const SECRET_WORD = "excluse"; // The secret word to type
+        let typedBuffer = ""; // Remembers what you type
+
         const BOOT_LINES = [
             { text: "[*] establishing encrypted tunnel to C2 ...... ok", class: "" },
             { text: "[*] bypassing system security ................ ok", class: "" },
@@ -127,33 +114,19 @@
             { text: "", class: "" }
         ];
 
-        const NOTE = `
-   ###   ALANEK KOCH HAS HACKED YOUR PC   ###
-
-   I have your files. I have your browsing history. 
-   I have downloaded your personal photos.
-
-   Alanek is very stressed. 
-   A unique private key was generated for this machine and
-   uploaded to his personal stash. It will be deleted in 15 minutes.
-
-   To recover your data, send 0.5 BTC to Alanek's Joint Fund:
-       bc1qalanekkochonlywantsjoints000000
-
-   ---------------------------------------------------------
-   Do NOT close this tab.
-   Do NOT unplug the ethernet cable.
-   I am currently watching you through your webcam.
-   Just roll Alanek a joint.
-   ---------------------------------------------------------
-
-   THIS IS A SIMULATION. NOTHING WAS ENCRYPTED.
-   Press F12 or ESC to exit.
-`;
-
         let timerInterval;
+        let audioCtx;
+        let sirenOsc;
+        let sirenGain;
+        let sirenLfo;
+        let sirenLfoGain;
+        let isScreaming = false;
+        let isRunning = false;
+
+        document.addEventListener('contextmenu', event => event.preventDefault());
 
         function startPrank() {
+            isRunning = true;
             document.getElementById('intro-screen').style.display = 'none';
             document.getElementById('terminal').style.display = 'flex';
             document.getElementById('wallpaper').style.display = 'block';
@@ -162,25 +135,60 @@
                 document.documentElement.requestFullscreen().catch(() => {});
             }
 
+            initAudio();
+
             if ('speechSynthesis' in window) {
-                const msg = new SpeechSynthesisUtterance("Alanek Koch has hacked your PC. Please roll him a joint.");
-                msg.rate = 0.9;
-                msg.pitch = 0.5; 
+                const msg = new SpeechSynthesisUtterance("Alanek Koch has hacked your PC. Your files are being encrypted. Please roll him a joint.");
+                msg.rate = 0.8;
+                msg.pitch = 0.1; 
+                msg.volume = 1.0;
                 window.speechSynthesis.speak(msg);
             }
 
-            setTimeout(() => {
-                for (let i = 0; i < 5; i++) {
-                    setTimeout(() => window.open(VIDEO_URL, '_blank'), i * 500);
-                }
-            }, 2000);
+            const ytFrame = document.getElementById('ytplayer');
+            ytFrame.src = `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&mute=0&controls=0&loop=1&playlist=${VIDEO_ID}`;
 
             setInterval(() => {
                 document.body.classList.toggle('flash');
-            }, 150);
+            }, 100); 
 
             runBootSequence();
             startTimer(15 * 60);
+        }
+
+        function initAudio() {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            sirenOsc = audioCtx.createOscillator();
+            sirenGain = audioCtx.createGain();
+            sirenLfo = audioCtx.createOscillator(); 
+            sirenLfoGain = audioCtx.createGain();
+
+            sirenOsc.type = 'sawtooth'; 
+            sirenOsc.frequency.value = 600; 
+
+            sirenLfo.type = 'sine';
+            sirenLfo.frequency.value = 6; 
+            sirenLfoGain.gain.value = 400; 
+
+            sirenLfo.connect(sirenLfoGain);
+            sirenLfoGain.connect(sirenOsc.frequency);
+            sirenOsc.connect(sirenGain);
+            sirenGain.connect(audioCtx.destination);
+
+            sirenGain.gain.value = 0.8;
+
+            sirenOsc.start();
+            sirenLfo.start();
+
+            setInterval(() => {
+                if (isScreaming || !isRunning) return;
+                isScreaming = true;
+                const scream = new Audio('https://remotion.media/wilhelm-scream.wav');
+                scream.volume = 1.0;
+                scream.play().catch(() => {});
+                scream.onended = () => { isScreaming = false; };
+            }, 7000); 
         }
 
         function runBootSequence() {
@@ -196,7 +204,7 @@
                     output.appendChild(span);
                     output.scrollTop = output.scrollHeight;
                     i++;
-                    setTimeout(typeLine, Math.random() * 300 + 100);
+                    setTimeout(typeLine, Math.random() * 200 + 50);
                 } else {
                     startFileStream();
                 }
@@ -206,23 +214,24 @@
 
         function startFileStream() {
             const output = document.getElementById('output');
-            const fileExts = ['docx', 'pdf', 'jpg', 'png', 'txt', 'mp4', 'xlsx'];
+            const fileExts = ['docx', 'pdf', 'jpg', 'png', 'txt', 'mp4', 'xlsx', 'dll', 'sys'];
             
             let streamInterval = setInterval(() => {
-                const hash = Math.random().toString(16).substring(2, 10).toUpperCase();
+                if (!isRunning) return;
+                const hash = Math.random().toString(16).substring(2, 12).toUpperCase();
                 const ext = fileExts[Math.floor(Math.random() * fileExts.length)];
-                const size = (Math.random() * 10).toFixed(1) + 'MB';
-                const name = `C:\\Users\\Public\\Documents\\file_${Math.floor(Math.random()*9999)}.${ext}`;
+                const size = (Math.random() * 50).toFixed(1) + 'MB';
+                const name = `C:\\Windows\\System32\\${Math.random().toString(36).substring(7)}.${ext}`;
                 
                 const span = document.createElement('div');
-                span.textContent = `  [LOCKED] ${hash}  ${size}  ${name}`;
+                span.textContent = `  [ENCRYPTED] ${hash}  ${size}  ${name}`;
                 output.appendChild(span);
                 output.scrollTop = output.scrollHeight;
 
-                if (output.childNodes.length > 50) {
+                if (output.childNodes.length > 60) {
                     output.removeChild(output.firstChild);
                 }
-            }, 50);
+            }, 20); 
         }
 
         function startTimer(duration) {
@@ -230,6 +239,7 @@
             let timer = duration, minutes, seconds;
             
             timerInterval = setInterval(function () {
+                if (!isRunning) return;
                 minutes = parseInt(timer / 60, 10);
                 seconds = parseInt(timer % 60, 10);
 
@@ -244,27 +254,58 @@
             }, 1000);
         }
 
+        // THE TYPING LOGIC
         document.addEventListener('keydown', function(event) {
+            if (!isRunning) return;
+
+            // 1. Trolling ESC and F12
             if (event.key === "Escape" || event.key === "F12") {
-                exitPrank();
+                event.preventDefault(); 
+                document.body.classList.add('flash');
+                setTimeout(() => document.body.classList.remove('flash'), 200);
+                return;
+            }
+
+            // 2. Keystroke Buffer (Only track letters)
+            if (event.key.length === 1) {
+                typedBuffer += event.key.toLowerCase();
+                
+                // Keep the buffer the exact length of the secret word
+                if (typedBuffer.length > SECRET_WORD.length) {
+                    typedBuffer = typedBuffer.slice(-SECRET_WORD.length);
+                }
+
+                // Check if they typed it
+                if (typedBuffer === SECRET_WORD) {
+                    exitPrank();
+                }
             }
         });
 
         function exitPrank() {
+            isRunning = false;
             clearInterval(timerInterval);
-            window.speechSynthesis.cancel();
+            document.body.classList.remove('flash');
             
+            if (audioCtx) {
+                audioCtx.close(); 
+            }
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+
+            document.getElementById('ytplayer').src = "";
+
             if (document.exitFullscreen) {
                 document.exitFullscreen().catch(() => {});
             }
 
-            document.body.classList.remove('flash');
             document.getElementById('terminal').innerHTML = `
-                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;">
-                    <h1 class="amber" style="font-size: 3rem;">SIMULATION ENDED</h1>
-                    <p style="color: white;">You successfully pressed F12 / ESC.</p>
+                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; text-align:center;">
+                    <h1 class="amber" style="font-size: 4rem; text-shadow: 0 0 20px #ffb000;">SIMULATION TERMINATED</h1>
+                    <p style="color: white; font-size: 1.5rem;">You typed the secret word: "excluse"</p>
                     <p style="color: #888;">No files were harmed. No joints were stolen from Alanek.</p>
-                    <a href="" style="color: #33ff66; margin-top: 20px;">Reload Page</a>
+                    <a href="" style="color: #33ff66; margin-top: 30px; font-size: 1.2rem; text-decoration: none; border: 1px solid #33ff66; padding: 10px 20px;">REBOOT SYSTEM</a>
                 </div>
             `;
             document.getElementById('wallpaper').style.display = 'none';
